@@ -65,6 +65,8 @@ public class WebSecurity {
                                 .permitAll()
                                 .requestMatchers(HttpMethod.GET, "/users/verify-email/**")
                                 .permitAll()
+                                .requestMatchers(HttpMethod.POST, "/booking")
+                                .permitAll()
                                 .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception

@@ -2,6 +2,7 @@ package com.example.userservice5.exception;
 
 import com.example.userservice5.model.response.ApiError;
 import com.example.userservice5.model.response.ErrorResponse;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.*;
 import org.springframework.lang.NonNull;
 import org.springframework.validation.FieldError;
@@ -44,6 +45,14 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).contentType(MediaType.APPLICATION_JSON).body(error);
     }
 
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ApiError> handleDataIntergrityViolationException(DataIntegrityViolationException ex){
+        ApiError error = new ApiError();
+        error.setStatus(HttpStatus.BAD_REQUEST);
+        error.setMessage("Resource already exists");
+        error.setTimeStamp(new Date());
+        return ResponseEntity.status(error.getStatus()).contentType(MediaType.APPLICATION_JSON).body(error);
+    }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(@NonNull MethodArgumentNotValidException ex,

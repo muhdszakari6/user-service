@@ -13,7 +13,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "booking")
+@Table(
+        name = "booking",
+        uniqueConstraints = { @UniqueConstraint(name = "UniqueSessionAndDate", columnNames = { "session_id", "booking_date" }
+        )})
 public class BookingEntity implements Serializable {
 
     private static final long serialVersionUID = 8059871061120284233L;
@@ -49,12 +52,6 @@ public class BookingEntity implements Serializable {
 
     @Getter
     @Setter
-    @ManyToOne()
-    @JoinColumn(name="pitch_id")
-    private PitchEntity pitch;
-
-    @Getter
-    @Setter
     private BookingStatus status;
 
     @CreationTimestamp
@@ -72,7 +69,5 @@ public class BookingEntity implements Serializable {
     @Getter
     @Setter
     private LocalDateTime deletedAt;
-
-
 
 }

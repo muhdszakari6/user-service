@@ -41,4 +41,7 @@ public class ApiError {
     public void setTimeStamp(Date timeStamp) {
         this.timeStamp = timeStamp;
     }
+
+    public static class BookingResponse {
+    }
 }
