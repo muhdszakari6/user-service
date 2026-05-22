@@ -1,4 +1,5 @@
 package com.example.userservice5.model.response;
+import com.example.userservice5.entity.PitchEntity;
 import lombok.Getter;
 import lombok.Setter;
 

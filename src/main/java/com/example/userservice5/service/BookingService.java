@@ -8,6 +8,7 @@ import com.example.userservice5.entity.UserEntity;
 import com.example.userservice5.enums.BookingStatus;
 import com.example.userservice5.exception.ApiException;
 import com.example.userservice5.model.response.BookingResponse;
+import com.example.userservice5.model.response.GetPitchResponse;
 import com.example.userservice5.repository.BookingRepository;
 import com.example.userservice5.repository.SessionRepository;
 import com.example.userservice5.repository.UserRepository;
@@ -17,12 +18,15 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.modelmapper.spi.MatchingStrategy;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -74,5 +78,16 @@ public class BookingService {
         returnValue.setPitch(pitch.getName());
         return returnValue;
     }
+
+    public Page<BookingEntity> getBookings(Long userId, LocalDate bookingDate, Long pitchId, Pageable pageable) {
+        return bookingRepository.findBookings(userId, bookingDate, pitchId, pageable);
+    }
+
+    public Page<BookingEntity> getPartnerBookings(Long userId, LocalDate bookingDate, Long pitchId, Pageable pageable) {
+        UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long partnerId = userPrincipal.getUserEntity().getId();
+        return bookingRepository.findPartnerBookings(userId, bookingDate, pitchId, pageable, partnerId);
+    }
+
 
 }
