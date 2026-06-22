@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,15 +24,16 @@ public class SessionService {
         ModelMapper modelMapper = new ModelMapper();
         List<SessionEntity> sessions = sessionRepository.findByPitchIdAndActiveTrue(pitchId);
         List<BookingEntity> bookings = bookingRepository.findBookingEntitiesByPitchAndDate(pitchId, date);
+        Set<Long> bookedSessionIds = bookings.stream()
+                .map(b -> b.getSession().getId())
+                .collect(Collectors.toSet());
+
         List<AvailableSessionResponse> result = sessions.stream().map(sessionEntity -> {
-            AvailableSessionResponse availableSessionResponse = modelMapper.map(sessionEntity, AvailableSessionResponse.class);
-            if (bookings.stream().anyMatch(bookingEntity -> bookingEntity.getSession().getId().equals(sessionEntity.getId()))) {
-                availableSessionResponse.setStatus("BOOKED");
-            } else {
-                availableSessionResponse.setStatus("AVAILABLE");
-            }
-            return availableSessionResponse;
+            AvailableSessionResponse response = modelMapper.map(sessionEntity, AvailableSessionResponse.class);
+            response.setStatus(bookedSessionIds.contains(sessionEntity.getId()) ? "BOOKED" : "AVAILABLE");
+            return response;
         }).toList();
+
         return result;
     }
 }

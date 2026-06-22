@@ -23,6 +23,7 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long>, J
             "LEFT JOIN s.pitch p " +
             "WHERE (p.id = :pitchId) " +
             "AND (b.bookingDate = :bookingDate) " +
+            "AND (b.status = 1) " +
             "AND (b.deletedAt IS NULL) " +
             "ORDER BY b.createdAt DESC")
     List<BookingEntity> findBookingEntitiesByPitchAndDate(@Param("pitchId") Long pitchId, @Param("bookingDate") LocalDate bookingDate);
