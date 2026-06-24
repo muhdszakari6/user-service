@@ -67,6 +67,8 @@ public class WebSecurity {
                                 .permitAll()
                                 .requestMatchers(HttpMethod.POST, "/booking")
                                 .permitAll()
+                                .requestMatchers(HttpMethod.GET, "/users/verify-email/**")
+                                .permitAll()
                                 .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception
@@ -90,7 +92,7 @@ public class WebSecurity {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5400"));
         configuration.setAllowedMethods(Arrays.asList("*"));
         configuration.setMaxAge(Long.valueOf(3600));
         configuration.addAllowedHeader("*");

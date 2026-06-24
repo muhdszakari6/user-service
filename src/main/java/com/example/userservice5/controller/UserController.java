@@ -6,6 +6,7 @@ import com.example.userservice5.model.request.InitiateResetPasswordRequest;
 import com.example.userservice5.model.request.ResetPasswordRequest;
 import com.example.userservice5.model.request.UserSignupRequest;
 import com.example.userservice5.model.response.OperationStatusModel;
+import com.example.userservice5.model.response.ProfileResponse;
 import com.example.userservice5.model.response.UserSignupResponse;
 import com.example.userservice5.service.UserService;
 import jakarta.validation.Valid;
@@ -77,5 +78,11 @@ public class UserController {
     @GetMapping(path = "")
     public ArrayList<String> getUsers(){
         return new ArrayList<>();
+    }
+
+    @GetMapping(path = "/me")
+    public ResponseEntity<ProfileResponse> getCurrentUser(){
+        ProfileResponse user = userService.getUser();
+        return ResponseEntity.status(200).body(user);
     }
 }

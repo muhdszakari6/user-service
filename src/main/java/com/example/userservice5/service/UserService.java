@@ -6,9 +6,11 @@ import com.example.userservice5.entity.PasswordResetTokenEntity;
 import com.example.userservice5.entity.RoleEntity;
 import com.example.userservice5.entity.UserEntity;
 import com.example.userservice5.exception.ApiException;
+import com.example.userservice5.model.response.ProfileResponse;
 import com.example.userservice5.repository.PasswordResetRepository;
 import com.example.userservice5.repository.RoleRepository;
 import com.example.userservice5.repository.UserRepository;
+import com.example.userservice5.security.UserPrincipal;
 import com.example.userservice5.utils.Utils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -152,5 +155,13 @@ public class UserService implements UserDetailsService {
             passwordResetRepository.delete(token);
             userRepository.save(user);
             return true;
+    }
+
+    public ProfileResponse getUser() {
+        ModelMapper mapper = new ModelMapper();
+        UserPrincipal userPrincipal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserEntity existingUser = userPrincipal.getUserEntity();
+        if(existingUser == null) throw new ApiException(HttpStatus.BAD_REQUEST,"User does not exist");
+        return mapper.map(existingUser, ProfileResponse.class);
     }
 }
