@@ -93,6 +93,7 @@ public class WebSecurity {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:5400"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5600"));
         configuration.setAllowedMethods(Arrays.asList("*"));
         configuration.setMaxAge(Long.valueOf(3600));
         configuration.addAllowedHeader("*");
