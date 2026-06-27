@@ -3,6 +3,9 @@ package com.example.userservice5.utils;
 import com.example.userservice5.SpringApplicationContext;
 import org.springframework.core.env.Environment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SecurityConstants {
     public static final long EXPIRATION_TIME = 864000000;
     public static final String TOKEN_PREFIX = "Bearer ";
@@ -15,5 +18,10 @@ public class SecurityConstants {
     public static String getTokenSecret(){
         Environment environment = (Environment) SpringApplicationContext.getBean("environment");
         return environment.getProperty("tokenSecret");
+    }
+    public static String getCorsAllowedOrigins() {
+        Environment environment = (Environment) SpringApplicationContext.getBean("environment");
+        String corsAllowedOrigins =  environment.getProperty("cors.allowed-origins");
+        return corsAllowedOrigins;
     }
 }

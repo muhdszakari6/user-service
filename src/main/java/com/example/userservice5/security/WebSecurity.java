@@ -1,6 +1,7 @@
 package com.example.userservice5.security;
 
 import com.example.userservice5.service.UserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -19,10 +20,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
+
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 @EnableWebSecurity
 @Configuration
 public class WebSecurity {
+    @Value("${cors.allowed-origins}") String corsAllowedOrigin;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserService userService;
     private AuthenticationManager authenticationManager;
@@ -96,7 +99,7 @@ public class WebSecurity {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5400", "http://localhost:5600"));
+        configuration.setAllowedOrigins(Arrays.asList(corsAllowedOrigin.split(",")));
         configuration.setAllowedMethods(Arrays.asList("*"));
         configuration.setMaxAge(Long.valueOf(3600));
         configuration.addAllowedHeader("*");
