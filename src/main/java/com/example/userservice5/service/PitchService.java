@@ -58,7 +58,10 @@ public class PitchService {
 
         PitchEntity pitch = mapper.map(requestBody, PitchEntity.class);
         pitch.setUserDetail(managedUser);
-        
+        if (pitch.getSessions() != null) {
+            pitch.getSessions().forEach(session -> session.setActive(true));
+        }
+
         PitchEntity storedPitch = pitchRepository.save(pitch);
 
         return mapper.map(storedPitch, PitchDto.class);
@@ -109,6 +112,7 @@ public class PitchService {
                }
             }else {
                 SessionEntity sessionEntity = modelMapper.map(sessionDto, SessionEntity.class);
+                sessionEntity.setActive(true);
                 pitchEntity.addSession(sessionEntity);
             }
         }
@@ -156,6 +160,12 @@ public class PitchService {
         sessionConfigurationDto.setNumberOfSessions(10);
         sessionConfigurationDto.setPitch(pitch);
         return sessionConfigurationDto;
+    }
+
+    public List<PitchDto> getAllPitches() {
+        ModelMapper modelMapper = new ModelMapper();
+        List<PitchEntity> pitchEntities = pitchRepository.findByDeletedAtIsNull();
+        return pitchEntities.stream().map(pitch -> modelMapper.map(pitch, PitchDto.class)).toList();
     }
 
     public Page<PitchDto> getPitches(Pageable pageable) {

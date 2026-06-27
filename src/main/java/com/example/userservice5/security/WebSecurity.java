@@ -69,6 +69,10 @@ public class WebSecurity {
                                 .permitAll()
                                 .requestMatchers(HttpMethod.GET, "/users/verify-email/**")
                                 .permitAll()
+                                .requestMatchers(HttpMethod.GET, "/pitch/public")
+                                .permitAll()
+                                .requestMatchers(HttpMethod.GET, "/session")
+                                .permitAll()
                                 .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception
@@ -92,8 +96,7 @@ public class WebSecurity {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5400"));
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5600"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5400", "http://localhost:5600"));
         configuration.setAllowedMethods(Arrays.asList("*"));
         configuration.setMaxAge(Long.valueOf(3600));
         configuration.addAllowedHeader("*");

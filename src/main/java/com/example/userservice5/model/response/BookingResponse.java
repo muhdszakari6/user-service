@@ -27,4 +27,8 @@ public class BookingResponse {
     @Setter
     private String pitch;
 
+    @Getter
+    @Setter
+    private String userEmail;
+
 }

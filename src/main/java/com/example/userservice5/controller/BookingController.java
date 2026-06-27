@@ -44,10 +44,12 @@ public class BookingController {
             @RequestParam(required = false) BookingStatus bookingStatus,
             Pageable pageable){
         ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         Page<BookingEntity> bookingEntities = bookingService.getBookings(userId, bookingDate, pitchId, pageable, deleted, bookingStatus);
         return bookingEntities.map(booking -> {
             BookingResponse response = mapper.map(booking, BookingResponse.class);
             response.setPitch(booking.getSession().getPitch().getName());
+            response.setUserEmail(booking.getUser() != null ? booking.getUser().getEmail() : booking.getUserEmail());
             return response;
         });
     }
@@ -63,10 +65,12 @@ public class BookingController {
             @RequestParam(required = false) BookingStatus bookingStatus
             ){
         ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         Page<BookingEntity> bookingEntities = bookingService.getPartnerBookings(userId, bookingDate, pitchId, pageable, deleted, bookingStatus);
         return bookingEntities.map(booking -> {
             BookingResponse response = mapper.map(booking, BookingResponse.class);
             response.setPitch(booking.getSession().getPitch().getName());
+            response.setUserEmail(booking.getUser() != null ? booking.getUser().getEmail() : booking.getUserEmail());
             return response;
         });
     }
@@ -81,10 +85,12 @@ public class BookingController {
             @RequestParam(required = false) BookingStatus bookingStatus
     ){
         ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         Page<BookingEntity> bookingEntities = bookingService.getUserBookings(bookingDate, pitchId, pageable, bookingStatus);
         return bookingEntities.map(booking -> {
             BookingResponse response = mapper.map(booking, BookingResponse.class);
             response.setPitch(booking.getSession().getPitch().getName());
+            response.setUserEmail(booking.getUser() != null ? booking.getUser().getEmail() : booking.getUserEmail());
             return response;
         });
     }

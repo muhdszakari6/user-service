@@ -61,7 +61,7 @@ public class BookingService {
         SessionEntity session = sessionRepository.findById(bookingDto.getSessionId())
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Session Not Found"));
 
-        Optional<BookingEntity> bookingEntity = bookingRepository.findBySessionAndBookingDateAndDeletedAtIsNull(session, bookingDto.getBookingDate());
+        Optional<BookingEntity> bookingEntity = bookingRepository.findBySessionAndBookingDateAndDeletedAtIsNullAndStatus(session, bookingDto.getBookingDate(), BookingStatus.SUCCESSFUL);
 
         if(bookingEntity.isPresent()){
             throw new ApiException(HttpStatus.BAD_REQUEST, "Already Booked");
@@ -76,7 +76,7 @@ public class BookingService {
         try {
             savedBooking = bookingRepository.save(booking);
         } catch (DataIntegrityViolationException e) {
-            throw new ApiException(HttpStatus.CONFLICT, "Slot already booked");
+            throw new ApiException(HttpStatus.CONFLICT, " Slot already booked");
         }
         PitchEntity pitch = savedBooking.getSession().getPitch();
         BookingResponse returnValue = modelMapper.map(savedBooking, BookingResponse.class);

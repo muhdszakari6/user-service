@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BookingRepository extends JpaRepository<BookingEntity, Long>, JpaSpecificationExecutor<BookingEntity> {
-    Optional<BookingEntity> findBySessionAndBookingDateAndDeletedAtIsNull(SessionEntity session, LocalDate bookingDate);
+    Optional<BookingEntity> findBySessionAndBookingDateAndDeletedAtIsNullAndStatus(SessionEntity session, LocalDate bookingDate, BookingStatus status);
 
     boolean existsBySessionAndDeletedAtIsNull(SessionEntity session);
 
@@ -60,6 +60,7 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long>, J
     @Query(value = "SELECT b FROM BookingEntity b " +
             "LEFT JOIN FETCH b.session s " +
             "LEFT JOIN FETCH s.pitch p " +
+            "LEFT JOIN FETCH b.user u " +
             "WHERE (:userId IS NULL OR b.user.id = :userId) " +
             "AND (:bookingDate IS NULL OR b.bookingDate = :bookingDate) " +
             "AND (:pitchId IS NULL OR p.id = :pitchId) " +
@@ -70,6 +71,7 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long>, J
             countQuery = "SELECT COUNT(b) FROM BookingEntity b " +
                     "LEFT JOIN b.session s " +
                     "LEFT JOIN s.pitch p " +
+                    "LEFT JOIN b.user u " +
                     "WHERE (:userId IS NULL OR b.user.id = :userId) " +
                     "AND (:bookingDate IS NULL OR b.bookingDate = :bookingDate) " +
                     "AND (:pitchId IS NULL OR p.id = :pitchId) " +

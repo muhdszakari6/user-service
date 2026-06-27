@@ -7,6 +7,7 @@ import com.example.userservice5.model.request.UpdatePitchRequest;
 import com.example.userservice5.model.response.*;
 import com.example.userservice5.service.PitchService;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -48,6 +49,16 @@ public class PitchController {
     public ResponseEntity<Void> deletePitch(@PathVariable Long id){
         this.pitchService.deletePitch(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(path = "/public", produces = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<List<GetPitchesResponse>> getPublicPitches(){
+        ModelMapper mapper = new ModelMapper();
+        List<GetPitchesResponse> response = this.pitchService.getAllPitches()
+                .stream()
+                .map(pitchDto -> mapper.map(pitchDto, GetPitchesResponse.class))
+                .toList();
+        return ResponseEntity.ok(response);
     }
 
     @PreAuthorize("hasRole('PARTNER')")
